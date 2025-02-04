@@ -34,3 +34,26 @@ They must provide:
 
 After they submit the new item, if it is a valid request, it should appear as part of the software catalog.
 
+
+
+```http
+POST http://localhost:1337/catalog
+Content-Type: application/json
+
+{
+  "name": "Visual Studio Code",
+  "vendor": "Microsoft",
+  "license": "OpenSource"
+}
+```
+
+```http
+400 BadRequest
+
+{
+    "message": "Sorry, bro, that didn't work",
+    "details": {
+        "vendor": "Vendor does not exist, have a manager add it"
+    }
+}
+```
