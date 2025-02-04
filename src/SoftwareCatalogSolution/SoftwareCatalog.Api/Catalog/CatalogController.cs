@@ -15,7 +15,15 @@ public class CatalogController : ControllerBase
     public async Task<ActionResult> AddItemToCatalogAsync(
         [FromBody] CatalogItemRequestModel request)
     {
-        return Ok(request);
+        // fake this for right now
+        var fakeResponse = new CatalogItemResponseDetailsModel
+        {
+            Id = Guid.NewGuid(),
+            Licence = CatalogItemLicenceTypes.OpenSource,
+            Name = request.Name,
+            Vendor = "Microsoft"
+        };
+        return StatusCode(201, fakeResponse);
     }
 }
 
@@ -23,5 +31,15 @@ public class CatalogController : ControllerBase
 public record CatalogItemRequestModel
 {
     public string Name { get; set; } = string.Empty;
+
+}
+
+public enum CatalogItemLicenceTypes { OpenSource, Free, Paid }
+public record CatalogItemResponseDetailsModel
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Vendor { get; set; } = string.Empty;
+    public CatalogItemLicenceTypes Licence { get; set; }
 
 }
