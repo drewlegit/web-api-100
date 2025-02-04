@@ -23,4 +23,5 @@ public class CatalogController : ControllerBase
 public record CatalogItemRequestModel
 {
     public string Name { get; set; } = string.Empty;
+
 }
