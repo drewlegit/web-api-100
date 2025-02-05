@@ -7,6 +7,8 @@ public class AddingAnItem(CatalogSystemTestFixture fixture) : IClassFixture<Cata
     [Theory]
     [InlineData("Visual Studio Code", "microsoft", CatalogItemLicenceTypes.OpenSource)]
     [InlineData("Visual Studio", "microsoft", CatalogItemLicenceTypes.Paid)]
+    [InlineData("Bob", "microsoft", CatalogItemLicenceTypes.Free)]
+    [InlineData("Destiny 2", "bungie", CatalogItemLicenceTypes.Paid)]
     public async Task CanAddAnItem(string name, string vendor, CatalogItemLicenceTypes license)
     {
 
