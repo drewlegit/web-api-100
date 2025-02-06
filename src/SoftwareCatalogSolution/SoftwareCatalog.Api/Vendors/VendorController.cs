@@ -1,19 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Marten;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SoftwareCatalog.Api.Vendors;
 
-public class VendorController : ControllerBase
+public class VendorController(IDocumentSession session) : ControllerBase
 {
-    [HttpGet("/vendors")]
-    public ActionResult GetAllVendors()
+
+    [HttpPost("/vendors")]
+    public async Task<ActionResult> AddVendorAsync(
+        [FromBody] VendorCreateModel request
+        )
     {
-        var vendors = new List<string>
+
+        var entity = new VendorEntity
         {
-            "Microsoft",
-            "Oracle",
-            "Bungie",
-            "JetBrains"
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            CreatedAt = DateTimeOffset.UtcNow,
+            Link = request.Link
         };
-        return Ok(vendors);
+
+        session.Store(entity);
+        await session.SaveChangesAsync();
+
+        var response = new VendorDetailsResponseModel()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Link = entity.Link,
+            CreatedAt = entity.CreatedAt
+        };
+        return StatusCode(201, response);
     }
+
+
+    [HttpGet("/vendors/{id:guid}")]
+    public async Task<ActionResult> GetVendorAsync(Guid id)
+    {
+        var entity = await session.Query<VendorEntity>().Where(v => v.Id == id).FirstOrDefaultAsync();
+
+        var response = new VendorDetailsResponseModel()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Link = entity.Link,
+            CreatedAt = entity.CreatedAt
+
+        };
+        return Ok(response);
+
+    }
+
 }
